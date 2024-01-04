@@ -128,11 +128,15 @@ public class TruecallerSdkPlugin : FlutterPlugin, MethodCallHandler, EventChanne
                 }
             }
             GET_PROFILE -> {
-                activity?.let { TruecallerSDK.getInstance().getUserProfile(it as FragmentActivity) } ?: result.error(
-                    "UNAVAILABLE",
-                    "Activity not available.",
-                    null
-                )
+                Thread {
+                    activity?.let {
+                        TruecallerSDK.getInstance().getUserProfile(it as FragmentActivity)
+                    } ?: result.error(
+                            "UNAVAILABLE",
+                            "Activity not available.",
+                            null
+                    )
+                }.start()
             }
             REQUEST_VERIFICATION -> {
                 val phoneNumber = call.argument<String>(Constants.PH_NO)?.takeUnless(String::isBlank)
